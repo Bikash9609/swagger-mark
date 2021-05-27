@@ -1,0 +1,443 @@
+openapi: 3.0.0
+info:
+  title: Server
+  version: 1.0.0
+  description: Maarkar server api docs for better understanding and reasonability
+tags:
+  - name: seller/profile
+    description: All seller related actions
+  - name: seller/auth
+    description: Seller realted auth actions
+  - name: seller/tags
+    description: All tags related seller actions
+  - name: seller/services
+    description: All services realted seller actions
+  - name: customer
+    description: All customer related actions
+  - name: customer/auth
+    description: Customer realted auth actions
+  - name: customer/address
+    description: customer address realted actions
+paths:
+  /seller/auth/login:
+    post:
+      tags:
+        - seller/auth
+      summary: Authenticate sellers login/signup
+      description:
+        Seller authentication could be done using this endpoint using /login or
+        /signup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+        description: sellers confidential details password and email
+      responses:
+        '200':
+          description: returns status 'OK' on success
+  /seller/auth/signup:
+    post:
+      tags:
+        - seller/auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+                - contactNo
+                - category
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                contactNo:
+                  type: string
+                category:
+                  type: string
+                name:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+        description: all the required details to signup user
+      responses:
+        '200':
+          description: Returns status 'OK' on success
+  /seller/get_data:
+    post:
+      tags:
+        - seller/profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+        description: get sellers profile data
+      responses:
+        '200':
+          description: Returns stats 'OK' on sucess
+  /seller/change_data:
+    post:
+      tags:
+        - seller/profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - bio
+                - address
+              properties:
+                token:
+                  type: string
+                bio:
+                  type: string
+                address:
+                  type: object
+                  properties:
+                    line1:
+                      type: string
+                      maxLength: 46
+                      minLength: 10
+                    line2:
+                      type: string
+                      maxLength: 46
+                      minLength: 10
+                    city:
+                      type: string
+                      maxLength: 50
+                    state:
+                      type: string
+                      maxLength: 50
+                    pincode:
+                      type: number
+                      minLength: 6
+                      maxLength: 6
+        description: Change user profile data
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/delete_profile:
+    post:
+      tags:
+        - seller/profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - password
+                - address
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+        description: Schedule user profile deletion
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/add_global_tags:
+    post:
+      tags:
+        - seller/tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - tag
+              properties:
+                token:
+                  type: string
+                tag:
+                  type: string
+        description: Add global tags to global tags list when not available
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/get_tags:
+    post:
+      tags:
+        - seller/tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - keyword
+              properties:
+                token:
+                  type: string
+                keyword:
+                  type: string
+        description: Get all possible tags matching to a keyword
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/add_tags:
+    post:
+      tags:
+        - seller/tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - tags
+              properties:
+                token:
+                  type: string
+                tags:
+                  type: array
+                  additionalProperties: false
+                  items:
+                    type: string
+        description: Add list of tags to profile of seller
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/delete_tags:
+    post:
+      tags:
+        - seller/tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - tags
+              properties:
+                token:
+                  type: string
+                tags:
+                  type: array
+                  additionalProperties: false
+                  items:
+                    type: string
+        description: Delete list of tags from profile of seller
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/get_services:
+    post:
+      tags:
+        - seller/services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - page
+              properties:
+                token:
+                  type: string
+                page:
+                  type: number
+        description: Get all the services created by seller
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/create_services:
+    post:
+      tags:
+        - seller/services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - token
+                - price
+              properties:
+                token:
+                  type: string
+                name:
+                  type: string
+                  maxLength: 70
+                description:
+                  type: string
+                  maxLength: 120
+                specialPrice:
+                  type: string
+                price:
+                  type: string
+        description: create a new service and add to seller profile
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/modify_service:
+    post:
+      tags:
+        - seller/services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - serviceId
+                - token
+              properties:
+                token:
+                  type: string
+                serviceId:
+                  type: string
+                name:
+                  type: string
+                  maxLength: 70
+                description:
+                  type: string
+                  maxLength: 120
+                specialPrice:
+                  type: string
+                price:
+                  type: string
+        description: create a new service and add to seller profile
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/delete_service:
+    post:
+      tags:
+        - seller/services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - serviceId
+                - token
+              properties:
+                token:
+                  type: string
+                serviceId:
+                  type: string
+        description: Schedule a service for deletion in 10 min
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/revert_service_deletion:
+    post:
+      tags:
+        - seller/services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - serviceId
+                - token
+              properties:
+                token:
+                  type: string
+                serviceId:
+                  type: string
+        description: Dismiss a service deletion in under 10 min of deletion
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /seller/toggle_services:
+    post:
+      tags:
+        - seller/services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - serviceId
+                - token
+                - active
+              properties:
+                token:
+                  type: string
+                active:
+                  type: boolean
+                serviceId:
+                  type: array
+                  items:
+                    type: string
+        description: Activate or deactivate a service
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+  /customer/add_new_address:
+    post:
+      tags:
+        - customer/address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - line1
+                - line2
+                - city
+                - state
+                - pincode
+              properties:
+                token:
+                  type: string
+                isDefault:
+                  type: boolean
+                  default: false
+                line1:
+                  type: string
+                line2:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                pincode:
+                  type: string
+        description: add new address to profile
+      responses:
+        '200':
+          description: Returns status 'OK' on sucess
+servers:
+  - url: https://localhost:3000/v1
+  - url: http://localhost:3000/v1
